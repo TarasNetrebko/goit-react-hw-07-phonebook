@@ -1,33 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PhonebookForm } from '../PhonebookForm/PhonebookForm';
 import { PhonebookList } from '../PhonebookList/PhonebookList';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getContacts } from 'redux/contacts/selector';
 import { getFilter } from 'redux/filter/selector';
 import { ContentContainer } from './App.styled';
 import { Filter } from '../Filter/Filter';
+import { fetchContacts } from 'redux/contacts/contacts-operations';
 
 export const App = () => {
-  // const [isFirstMount, setIsFirstMount] = useState(true);
   const contacts = useSelector(getContacts);
-  const filter = useSelector(getFilter)
-  // useEffect(() => {
-  //   if (isFirstMount) {
-  //     if (localStorage.getItem('contacts') !== null) {
-  //       dispatch(changeContacts(JSON.parse(localStorage.getItem('contacts'))))
-  //     }
-  //     setIsFirstMount(false);
-  //   } else {
-  //     localStorage.setItem('contacts', JSON.stringify(contacts))
-  //   }
-  //   // eslint-disable-next-line
-  // }, [contacts])
+  const filter = useSelector(getFilter);
+  const dispatch = useDispatch();
+
+  useEffect(()=> {
+        dispatch(fetchContacts())
+    }, [dispatch]);
+
   const normalizedFilter = filter.toLowerCase();
   const filteredContacts = contacts.filter(contact => {
     return (contact.name.toLowerCase().includes(normalizedFilter) || contact.number.includes(normalizedFilter))
-    }
-      
-    );
+    }      
+  );
     return (
       <div
         style={{
